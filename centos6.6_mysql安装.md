@@ -54,20 +54,32 @@ service mysqld start</br>
 mysql</br>
 ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)</br>
 尼玛，我怎么知道密码？我都没设置密码</br>
-/usr/bin/mysqld_safe --skip-grant-tables &</br>
-mysql -u root -p</br>
+shell>/usr/bin/mysqld_safe --skip-grant-tables &</br>
+shell>mysql -u root -p</br>
 下面的密码直接键入回车即可.</br>
-use mysql</br>
-update mysql.user set authentication_string=PASSWORD('root') where user='root' and host='localhost';</br>
-flush privileges;</br>
-exit;</br>
-mysql -u root -p</br>
+mysql>use mysql</br>
+mysql>update mysql.user set authentication_string=PASSWORD('root') where user='root' and host='localhost';</br>
+mysql>flush privileges;</br>
+mysql>exit;</br>
+shell>mysql -u root -p</br>
 输入密码即可</br>
 完毕！</br>
 突然发现在关闭服务器后去启动mysql的时候又启动失败了</br>
 猜想是getenforce，于是乎执行getenforce</br>
 竟然成了Enforcing，如果每次启动都这样，岂不是很累，于是乎不能忍</br>
 google了下，永久解决办法是设置永久性的</br>
-vi /etc/sysconfig/selinux</br>
+shell>vi /etc/sysconfig/selinux</br>
 SELINUX=disabled 设置成这样既可，打开是知道共有三个值可以选择的</br>
+done!</br>
+然后进入
+shell>mysql -u root -p</br>
+输入密码后执行</br>
+mysql>show databases;</br>
+ERROR 1820 (HY000): You must reset your password using ALTER USER statement before executing this statement.</br>
+错误解决办法：</br>
+mysql>SET PASSWORD= PASSWORD('new password');</br>
+mysql>ALTER USER 'root'@'localhost' PASSWORD EXPIRE NEVER;</br>
+mysql>flush privileges;</br>
+mysql>exit;</br>
+重新登录既可</br>
 done!</br>
