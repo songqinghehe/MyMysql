@@ -64,3 +64,10 @@ exit;</br>
 mysql -u root -p</br>
 输入密码即可</br>
 完毕！</br>
+突然发现在关闭服务器后去启动mysql的时候又启动失败了</br>
+猜想是getenforce，于是乎执行getenforce</br>
+竟然成了Enforcing，如果每次启动都这样，岂不是很累，于是乎不能忍</br>
+google了下，永久解决办法是设置永久性的</br>
+vi /etc/sysconfig/selinux</br>
+SELINUX=disabled 设置成这样既可，打开是知道共有三个值可以选择的</br>
+done!</br>
