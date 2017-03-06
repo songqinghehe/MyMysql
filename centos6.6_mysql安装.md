@@ -15,3 +15,52 @@ chkconfig mysqld on	//设置成开机启动，这样就不用每次都去手动�
 mysql -u root -p	//进入mysql数据库</br>
 Enter password:		//输入密码即可</br>
 完毕！</br>
+
+>centos6.6安装mysql5.7.17
+
+因用yum安装的是比较古老的mysql版本，所以需要升级最新版本</br>
+首先查看安装的mysql，需要全部移除</br>
+rpm -qa | grep mysql</br>
+mysql-community-common-5.1.17-1.el6.x86_64</br>
+mysql-community-libs-5.2.17-1.el6.x86_64</br>
+mysql-community-server-5.1.17-1.el6.x86_64</br>
+mysql-community-client-5.1.17-1.el6.x86_64</br>
+一共四个需要全部删除</br>
+rpm -e --nodeps mysql-community-common-5.1.17-1.el6.x86_64</br>
+rpm -e --nodeps mysql-community-libs-5.2.17-1.el6.x86_64</br>
+rpm -e --nodeps mysql-community-server-5.1.17-1.el6.x86_64</br>
+rpm -e --nodeps mysql-community-client-5.1.17-1.el6.x86_64</br>
+rpm -qa | grep mysql</br>
+确保没有了mysql</br>
+
+进入：https://dev.mysql.com/downloads/file/?id=467446</br>
+下载到的包：mysql-5.7.17-1.el6.x86_64.rpm-bundle.tar</br>
+cd /tmp</br>
+rz mysql-5.7.17-1.el6.x86_64.rpm-bundle.tar</br>
+tar -xvf mysql-5.7.17-1.el6.x86_64.rpm-bundle.tar</br>
+rpm -ivh mysql-community-common-5.7.17-1.el6.x86_64.rpm</br>
+rpm -ivh mysql-community-libs-5.7.17-1.el6.x86_64.rpm</br>
+rpm -ivh mysql-community-client-5.7.17-1.el6.x86_64.rpm</br>
+rpm -ivh mysql-community-server-5.7.17-1.el6.x86_64.rpm</br>
+chmod 777 -R /var/lib/mysql</br>
+service mysqld start</br>
+MySQL Daemon failed to start.</br>
+正在启动 mysqld： [失败]</br>
+getenforce</br>
+Enforcing</br>
+setenforce 0</br>
+service mysqld start</br>
+正在启动 mysqld： [确定]</br>
+mysql</br>
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)</br>
+尼玛，我怎么知道密码？我都没设置密码</br>
+/usr/bin/mysqld_safe --skip-grant-tables &</br>
+mysql -u root -p</br>
+下面的密码直接键入回车即可.</br>
+use mysql</br>
+update mysql.user set authentication_string=PASSWORD('root') where user='root' and host='localhost';</br>
+flush privileges;</br>
+exit;</br>
+mysql -u root -p</br>
+输入密码即可</br>
+完毕！</br>
